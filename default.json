@@ -1,0 +1,34 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":semanticCommits",
+    "docker:enableMajor"
+  ],
+  "schedule": ["before 4pm on friday"],
+  "timezone": "Asia/Kolkata",
+  "labels": ["dependencies"],
+  "packageRules": [
+    {
+      "description": "Auto-merge Docker patch and digest updates",
+      "matchUpdateTypes": ["patch", "digest"],
+      "automerge": true
+    },
+    {
+      "description": "Label minor updates",
+      "matchUpdateTypes": ["minor"],
+      "addLabels": ["minor - safe to merge"]
+    },
+    {
+      "description": "Label major updates",
+      "matchUpdateTypes": ["major"],
+      "addLabels": ["major - ask Claude"]
+    },
+    {
+      "description": "Auto-merge and label security updates",
+      "matchCategories": ["security"],
+      "automerge": true,
+      "addLabels": ["security"]
+    }
+  ]
+}
