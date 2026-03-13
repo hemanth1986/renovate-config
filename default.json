@@ -5,7 +5,7 @@
     ":semanticCommits",
     "docker:enableMajor"
   ],
-  "schedule": ["before 4pm on friday"],
+  "schedule": ["before 5pm on friday"],
   "timezone": "Asia/Kolkata",
   "labels": ["dependencies"],
   "packageRules": [
