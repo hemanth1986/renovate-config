@@ -8,27 +8,58 @@
   "schedule": ["before 5pm on friday"],
   "timezone": "Asia/Kolkata",
   "labels": ["dependencies"],
+  "minimumReleaseAge": "3 days",
   "packageRules": [
     {
-      "description": "Auto-merge Docker patch and digest updates",
-      "matchUpdateTypes": ["patch", "digest"],
-      "automerge": true
+      "description": "Auto-merge digest updates silently (same version, rebuilt layers)",
+      "matchUpdateTypes": ["digest"],
+      "automerge": true,
+      "automergeType": "branch",
+      "addLabels": ["digest - auto"]
     },
     {
-      "description": "Label minor updates",
+      "description": "Auto-merge pin updates silently (pins floating tag to digest)",
+      "matchUpdateTypes": ["pin", "pinDigest"],
+      "automerge": true,
+      "automergeType": "branch",
+      "addLabels": ["pin - auto"]
+    },
+    {
+      "description": "Auto-merge patch updates (bug fixes, backwards-compatible)",
+      "matchUpdateTypes": ["patch"],
+      "automerge": true,
+      "addLabels": ["patch - auto"]
+    },
+    {
+      "description": "Label minor updates for manual review (Docker minors can break)",
       "matchUpdateTypes": ["minor"],
-      "addLabels": ["minor - safe to merge"]
+      "addLabels": ["minor - review"]
     },
     {
-      "description": "Label major updates",
+      "description": "Label major updates for careful review (breaking by definition)",
       "matchUpdateTypes": ["major"],
-      "addLabels": ["major - ask Claude"]
+      "addLabels": ["major - review"]
     },
     {
-      "description": "Auto-merge and label security updates",
+      "description": "Auto-merge lock file maintenance silently",
+      "matchUpdateTypes": ["lockFileMaintenance"],
+      "automerge": true,
+      "automergeType": "branch",
+      "addLabels": ["maintenance - auto"]
+    },
+    {
+      "description": "Security updates: auto-merge immediately, skip release age delay",
       "matchCategories": ["security"],
       "automerge": true,
-      "addLabels": ["security"]
+      "minimumReleaseAge": "0 days",
+      "prCreation": "immediate",
+      "addLabels": ["security - urgent"]
+    },
+    {
+      "description": "NEVER auto-merge 0.x packages (semver allows breaking in any 0.x release)",
+      "matchCurrentVersion": "/^0/",
+      "automerge": false,
+      "addLabels": ["⚠️ 0.x - review"]
     }
   ]
 }
