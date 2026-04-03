@@ -5,61 +5,99 @@
     ":semanticCommits",
     "docker:enableMajor"
   ],
-  "schedule": ["before 5pm on friday"],
+  "schedule": [
+    "before 5pm on friday"
+  ],
   "timezone": "Asia/Kolkata",
-  "labels": ["dependencies"],
+  "labels": [
+    "dependencies"
+  ],
   "minimumReleaseAge": "3 days",
   "packageRules": [
     {
       "description": "Auto-merge digest updates silently (same version, rebuilt layers)",
-      "matchUpdateTypes": ["digest"],
+      "matchUpdateTypes": [
+        "digest"
+      ],
       "automerge": true,
       "automergeType": "branch",
-      "addLabels": ["digest - auto"]
+      "addLabels": [
+        "digest - auto"
+      ]
     },
     {
       "description": "Auto-merge pin updates silently (pins floating tag to digest)",
-      "matchUpdateTypes": ["pin", "pinDigest"],
+      "matchUpdateTypes": [
+        "pin",
+        "pinDigest"
+      ],
       "automerge": true,
       "automergeType": "branch",
-      "addLabels": ["pin - auto"]
+      "addLabels": [
+        "pin - auto"
+      ]
     },
     {
       "description": "Auto-merge patch updates (bug fixes, backwards-compatible)",
-      "matchUpdateTypes": ["patch"],
+      "matchUpdateTypes": [
+        "patch"
+      ],
       "automerge": true,
-      "addLabels": ["patch - auto"]
+      "addLabels": [
+        "patch - auto"
+      ]
     },
     {
       "description": "Label minor updates for manual review (Docker minors can break)",
-      "matchUpdateTypes": ["minor"],
-      "addLabels": ["minor - review"]
+      "matchUpdateTypes": [
+        "minor"
+      ],
+      "addLabels": [
+        "minor - review"
+      ]
     },
     {
       "description": "Label major updates for careful review (breaking by definition)",
-      "matchUpdateTypes": ["major"],
-      "addLabels": ["major - review"]
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "addLabels": [
+        "major - review"
+      ]
     },
     {
       "description": "Auto-merge lock file maintenance silently",
-      "matchUpdateTypes": ["lockFileMaintenance"],
+      "matchUpdateTypes": [
+        "lockFileMaintenance"
+      ],
       "automerge": true,
       "automergeType": "branch",
-      "addLabels": ["maintenance - auto"]
+      "addLabels": [
+        "maintenance - auto"
+      ]
     },
     {
       "description": "Security updates: auto-merge immediately, skip release age delay",
-      "matchCategories": ["security"],
+      "matchCategories": [
+        "security"
+      ],
       "automerge": true,
       "minimumReleaseAge": "0 days",
       "prCreation": "immediate",
-      "addLabels": ["security - urgent"]
+      "addLabels": [
+        "security - urgent"
+      ]
     },
     {
       "description": "NEVER auto-merge 0.x packages (semver allows breaking in any 0.x release)",
       "matchCurrentVersion": "/^0/",
       "automerge": false,
-      "addLabels": ["⚠️ 0.x - review"]
+      "addLabels": [
+        "\u26a0\ufe0f 0.x - review"
+      ]
     }
+  ],
+  "assignees": [
+    "hemanth1986"
   ]
 }
