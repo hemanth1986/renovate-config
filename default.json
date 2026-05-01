@@ -95,6 +95,15 @@
       "addLabels": [
         "\u26a0\ufe0f 0.x - review"
       ]
+    },
+    {
+      "description": "Upstream-app docker bumps: open PR on day 0 (no internal-checks suppression). Automerge still respects the 3-day stability window via the renovate/stability-days status check on the PR. Fixes the 'Pending Status Checks' deadlock for repos without PR-side CI (most upstream apps).",
+      "matchManagers": [
+        "docker-compose",
+        "dockerfile"
+      ],
+      "internalChecksFilter": "none",
+      "prCreation": "immediate"
     }
   ],
   "assignees": [
