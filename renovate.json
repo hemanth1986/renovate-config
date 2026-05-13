@@ -1,0 +1,6 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["local>hemanth1986/renovate-config"],
+  "enabled": false,
+  "description": "Central Renovate preset · this IS the shared config other repos extend."
+}
