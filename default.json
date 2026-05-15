@@ -104,6 +104,12 @@
       ],
       "internalChecksFilter": "none",
       "prCreation": "immediate"
+    },
+    {
+      "description": "Pin postgres to 18.x line — major bumps are destructive (require pg_upgrade or dump/restore). Edit this regex when scheduling a planned 18 → 19 migration.",
+      "matchPackageNames": ["postgres"],
+      "matchDatasources": ["docker"],
+      "allowedVersions": "/^18\\./"
     }
   ],
   "assignees": [
