@@ -13,6 +13,12 @@
     "dependencies"
   ],
   "minimumReleaseAge": "3 days",
+  "vulnerabilityAlerts": {
+    "automerge": true,
+    "addLabels": [
+      "security - urgent"
+    ]
+  },
   "packageRules": [
     {
       "description": "Auto-merge digest updates silently (same version, rebuilt layers)",
@@ -38,10 +44,11 @@
       ]
     },
     {
-      "description": "Auto-merge patch updates (bug fixes, backwards-compatible)",
+      "description": "Auto-merge patch updates (bug fixes, backwards-compatible) — excludes 0.x, which the 0.x rule below force-holds for review",
       "matchUpdateTypes": [
         "patch"
       ],
+      "matchCurrentVersion": "!/^0/",
       "automerge": true,
       "addLabels": [
         "patch - auto"
@@ -77,23 +84,39 @@
       ]
     },
     {
-      "description": "Security updates: auto-merge immediately, skip release age delay",
-      "matchCategories": [
-        "security"
-      ],
-      "automerge": true,
-      "minimumReleaseAge": "0 days",
-      "prCreation": "immediate",
-      "addLabels": [
-        "security - urgent"
-      ]
-    },
-    {
       "description": "NEVER auto-merge 0.x packages (semver allows breaking in any 0.x release)",
       "matchCurrentVersion": "/^0/",
       "automerge": false,
       "addLabels": [
         "\u26a0\ufe0f 0.x - review"
+      ]
+    },
+    {
+      "description": "Group dev-dependency minor+patch bumps into one review PR (cuts PR noise; devDep patches ride the weekly group instead of auto-merging individually)",
+      "matchDepTypes": [
+        "devDependencies"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "groupName": "dev minor+patch"
+    },
+    {
+      "description": "Never bump our own GHCR images \u2014 built in CI, not pulled. Centralizes the per-repo ignoreDeps and prevents the self-image auto-merge loop.",
+      "matchPackageNames": [
+        "ghcr.io/hemanth1986/**"
+      ],
+      "enabled": false
+    },
+    {
+      "description": "xyOps is the production scheduler \u2014 never auto-merge/auto-deploy unattended; review and deploy by hand.",
+      "matchPackageNames": [
+        "ghcr.io/pixlcore/xyops"
+      ],
+      "automerge": false,
+      "addLabels": [
+        "prod - manual"
       ]
     },
     {
