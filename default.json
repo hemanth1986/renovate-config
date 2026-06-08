@@ -14,7 +14,7 @@
   ],
   "minimumReleaseAge": "3 days",
   "vulnerabilityAlerts": {
-    "automerge": true,
+    "automerge": false,
     "addLabels": [
       "security - urgent"
     ]
