@@ -6,13 +6,14 @@
     "docker:enableMajor"
   ],
   "schedule": [
-    "before 5pm on friday"
+    "* * * * 4-6"
   ],
   "timezone": "Asia/Kolkata",
   "labels": [
     "dependencies"
   ],
   "minimumReleaseAge": "3 days",
+  "internalChecksFilter": "none",
   "osvVulnerabilityAlerts": true,
   "vulnerabilityAlerts": {
     "automerge": false,
@@ -157,6 +158,12 @@
       "matchDatasources": ["github-releases"],
       "ignoreUnstable": true,
       "allowedVersions": "<3.0.0"
+    },
+    {
+      "description": "linuxserver.io images tag as X.Y.Z[.BUILD]-lsN; default docker versioning can't compare the -lsN suffix, so updates (e.g. prowlarr) were silently missed. Parse with regex versioning; optional groups also cover plain X.Y.Z linuxserver tags (e.g. speedtest-tracker).",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["/linuxserver/"],
+      "versioning": "regex:^v?(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)(?:\\.(?<build>\\d+))?(?:-ls(?<revision>\\d+))?$"
     }
   ],
   "customManagers": [
