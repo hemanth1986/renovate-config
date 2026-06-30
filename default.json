@@ -177,8 +177,5 @@
       "datasourceTemplate": "github-releases",
       "versioningTemplate": "semver"
     }
-  ],
-  "assignees": [
-    "hemanth1986"
   ]
 }
