@@ -143,13 +143,14 @@
       "allowedVersions": "/^11\\.4\\./"
     },
     {
-      "description": "MediaFusion ships only prerelease beta tags (6.0.0-beta.NN). Default docker versioning treats -beta.NN as a compatibility suffix and never updates between betas; use semver so it parses as a prerelease and force unstable updates so Renovate follows the beta line. Held for manual review (betas can break a live service). Centralized from mediafusion-personal.",
+      "description": "MediaFusion ships only prerelease beta tags (6.0.0-beta.NN). Default docker versioning treats -beta.NN as a compatibility suffix and never updates between betas; use semver so it parses as a prerelease and force unstable updates so Renovate follows the beta line. Held for manual review (betas can break a live service). beta.26 is BLOCKED via allowedVersions: its DB migration crash-loops api+worker on existing Postgres (PG 42601, exit 101 — upstream issue #702, fix unreleased). It was merged+rolled-back twice (2026-06-29 #6, 2026-07-03 #7). Remove the exclusion once beta.27 (carrying upstream 07f50d3) ships. Centralized from mediafusion-personal.",
       "matchDatasources": ["docker"],
       "matchPackageNames": ["mhdzumair/mediafusion"],
       "versioning": "semver",
       "ignoreUnstable": false,
       "respectLatest": false,
       "automerge": false,
+      "allowedVersions": "!/^6\\.0\\.0-beta\\.26$/",
       "addLabels": ["beta - review"]
     },
     {
