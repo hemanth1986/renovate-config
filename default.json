@@ -50,7 +50,7 @@
       "matchUpdateTypes": [
         "patch"
       ],
-      "matchCurrentVersion": "!/^0/",
+      "matchCurrentVersion": "!/^v?0/",
       "automerge": true,
       "addLabels": [
         "patch - auto"
@@ -86,8 +86,8 @@
       ]
     },
     {
-      "description": "NEVER auto-merge 0.x packages (semver allows breaking in any 0.x release)",
-      "matchCurrentVersion": "/^0/",
+      "description": "NEVER auto-merge 0.x packages (semver allows breaking in any 0.x release). ^v?0 because matchCurrentVersion regexes see the raw tag string — v-prefixed tags (scanopy v0.17.x) escaped /^0/.",
+      "matchCurrentVersion": "/^v?0/",
       "automerge": false,
       "addLabels": [
         "\u26a0\ufe0f 0.x - review"
@@ -127,7 +127,6 @@
         "docker-compose",
         "dockerfile"
       ],
-      "internalChecksFilter": "none",
       "prCreation": "immediate"
     },
     {
