@@ -142,12 +142,12 @@
       "allowedVersions": "/^11\\.4\\./"
     },
     {
-      "description": "MediaFusion shipped only prerelease beta tags through 6.0.0-beta.29; default docker versioning treats -beta.NN as a compatibility suffix and never updates between betas, so semver + unstable updates are kept to follow any future beta line. Held for manual review (upgrades can break a live service). The beta.26 allowedVersions block was REMOVED 2026-07-21: upstream issue #702 is closed and its fix (07f50d3) shipped in beta.27 → 6.0.0 → 6.0.1, so the exclusion no longer gates anything. Centralized from mediafusion-personal.",
+      "description": "MediaFusion now ships stable tags (6.0.0, 6.0.1, …). Track STABLE ONLY (2026-07-22): ignoreUnstable + respectLatest skip the 6.0.0-beta.NN prereleases it still also publishes. semver parses the tags cleanly. Held for manual review (automerge:false) — a version bump can carry a heavy DB migration (6.0.1's migration 0036 ran 35min on our DB, 2026-07-21). History: this rule tracked the beta line through 6.0.0-beta.29 with ignoreUnstable/respectLatest=false; the beta.26 allowedVersions block (PG 42601 crash-loop, upstream #702) was dropped once its fix shipped in 6.0.1. Centralized from mediafusion-personal.",
       "matchDatasources": ["docker"],
       "matchPackageNames": ["mhdzumair/mediafusion"],
       "versioning": "semver",
-      "ignoreUnstable": false,
-      "respectLatest": false,
+      "ignoreUnstable": true,
+      "respectLatest": true,
       "automerge": false,
       "addLabels": ["beta - review"]
     },
