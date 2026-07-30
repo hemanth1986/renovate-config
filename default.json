@@ -6,7 +6,7 @@
     "docker:enableMajor"
   ],
   "schedule": [
-    "* * * * 4-6"
+    "* 0-8 * * *"
   ],
   "timezone": "Asia/Kolkata",
   "labels": [
