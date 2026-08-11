@@ -8,15 +8,21 @@
   "schedule": [
     "* 0-8 * * *"
   ],
+  "automergeSchedule": [
+    "* 0-8 * * *"
+  ],
   "timezone": "Asia/Kolkata",
   "labels": [
     "dependencies"
   ],
   "minimumReleaseAge": "3 days",
   "internalChecksFilter": "none",
+  "internalChecksAsSuccess": true,
+  "automerge": true,
+  "platformAutomerge": false,
   "osvVulnerabilityAlerts": true,
   "vulnerabilityAlerts": {
-    "automerge": false,
+    "minimumReleaseAge": "3 days",
     "addLabels": [
       "security - urgent"
     ]
@@ -46,23 +52,23 @@
       ]
     },
     {
-      "description": "Auto-merge patch updates (bug fixes, backwards-compatible) — excludes 0.x, which the 0.x rule below force-holds for review",
+      "description": "Auto-merge patch updates after the fleet-wide 3-day stability window",
       "matchUpdateTypes": [
         "patch"
       ],
-      "matchCurrentVersion": "!/^v?0/",
       "automerge": true,
       "addLabels": [
         "patch - auto"
       ]
     },
     {
-      "description": "Label minor updates for manual review (Docker minors can break)",
+      "description": "Auto-merge minor updates after the fleet-wide 3-day stability window",
       "matchUpdateTypes": [
         "minor"
       ],
+      "automerge": true,
       "addLabels": [
-        "minor - review"
+        "minor - auto"
       ]
     },
     {
@@ -70,6 +76,7 @@
       "matchUpdateTypes": [
         "major"
       ],
+      "automerge": false,
       "addLabels": [
         "major - review"
       ]
@@ -86,15 +93,7 @@
       ]
     },
     {
-      "description": "NEVER auto-merge 0.x packages (semver allows breaking in any 0.x release). ^v?0 because matchCurrentVersion regexes see the raw tag string — v-prefixed tags (scanopy v0.17.x) escaped /^0/.",
-      "matchCurrentVersion": "/^v?0/",
-      "automerge": false,
-      "addLabels": [
-        "\u26a0\ufe0f 0.x - review"
-      ]
-    },
-    {
-      "description": "Group dev-dependency minor+patch bumps into one review PR (cuts PR noise; devDep patches ride the weekly group instead of auto-merging individually)",
+      "description": "Group dev-dependency minor+patch bumps; inherit the normal auto-merge gates",
       "matchDepTypes": [
         "devDependencies"
       ],
@@ -112,16 +111,6 @@
       "enabled": false
     },
     {
-      "description": "xyOps is the production scheduler \u2014 never auto-merge/auto-deploy unattended; review and deploy by hand.",
-      "matchPackageNames": [
-        "ghcr.io/pixlcore/xyops"
-      ],
-      "automerge": false,
-      "addLabels": [
-        "prod - manual"
-      ]
-    },
-    {
       "description": "Upstream-app docker bumps: open PR on day 0 (no internal-checks suppression). Automerge still respects the 3-day stability window via the renovate/stability-days status check on the PR. Fixes the 'Pending Status Checks' deadlock for repos without PR-side CI (most upstream apps).",
       "matchManagers": [
         "docker-compose",
@@ -130,33 +119,18 @@
       "prCreation": "immediate"
     },
     {
-      "description": "Pin postgres to 18.x line — major bumps are destructive (require pg_upgrade or dump/restore). Edit this regex when scheduling a planned 18 → 19 migration.",
-      "matchPackageNames": ["postgres"],
-      "matchDatasources": ["docker"],
-      "allowedVersions": "/^18\\./"
-    },
-    {
-      "description": "Pin mariadb to the 11.4 LTS line (supported until 2029-05). Edit this regex when scheduling a planned LTS migration. Centralized from mariadb-shared-hetzner.",
-      "matchPackageNames": ["mariadb"],
-      "matchDatasources": ["docker"],
-      "allowedVersions": "/^11\\.4\\./"
-    },
-    {
-      "description": "MediaFusion now ships stable tags (6.0.0, 6.0.1, …). Track STABLE ONLY (2026-07-22): ignoreUnstable + respectLatest skip the 6.0.0-beta.NN prereleases it still also publishes. semver parses the tags cleanly. Held for manual review (automerge:false) — a version bump can carry a heavy DB migration (6.0.1's migration 0036 ran 35min on our DB, 2026-07-21). History: this rule tracked the beta line through 6.0.0-beta.29 with ignoreUnstable/respectLatest=false; the beta.26 allowedVersions block (PG 42601 crash-loop, upstream #702) was dropped once its fix shipped in 6.0.1. Centralized from mediafusion-personal.",
+      "description": "MediaFusion: track stable releases only; ignore prerelease tags. Centralized from mediafusion-personal.",
       "matchDatasources": ["docker"],
       "matchPackageNames": ["mhdzumair/mediafusion"],
       "versioning": "semver",
       "ignoreUnstable": true,
-      "respectLatest": true,
-      "automerge": false,
-      "addLabels": ["beta - review"]
+      "respectLatest": true
     },
     {
       "description": "Self-built apps tracked via the github-releases customManager (e.g. aiometadata): track stable releases only, no prereleases. Centralized from aiometadata-personal.",
       "matchDepNames": ["cedya77/aiometadata"],
       "matchDatasources": ["github-releases"],
-      "ignoreUnstable": true,
-      "allowedVersions": "<3.0.0"
+      "ignoreUnstable": true
     },
     {
       "description": "linuxserver.io images tag as X.Y.Z[.BUILD]-lsN; default docker versioning can't compare the -lsN suffix, so updates (e.g. prowlarr) were silently missed. Parse with regex versioning; optional groups also cover plain X.Y.Z linuxserver tags (e.g. speedtest-tracker).",
