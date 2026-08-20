@@ -27,6 +27,13 @@
       "security - urgent"
     ]
   },
+  "docker-compose": {
+    "managerFilePatterns": [
+      "/(^|/)agent/[^/]+\\.ya?ml$/",
+      "/(^|/)docker/smoke-compose\\.ya?ml$/",
+      "/(^|/)a1-london\\.ya?ml$/"
+    ]
+  },
   "packageRules": [
     {
       "description": "Auto-merge digest updates silently (same version, rebuilt layers)",
@@ -104,11 +111,31 @@
       "groupName": "dev minor+patch"
     },
     {
+      "description": "Pin Docker images; treat missing release timestamps as eligible after the normal gate.",
+      "matchDatasources": ["docker"],
+      "pinDigests": true,
+      "minimumReleaseAgeBehaviour": "timestamp-optional"
+    },
+    {
       "description": "Never bump our own GHCR images \u2014 built in CI, not pulled. Centralizes the per-repo ignoreDeps and prevents the self-image auto-merge loop.",
       "matchPackageNames": [
         "ghcr.io/hemanth1986/**"
       ],
       "enabled": false
+    },
+    {
+      "description": "Track the shared pgBackRest image despite the general self-image exclusion.",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["ghcr.io/hemanth1986/postgres-pgbackrest"],
+      "enabled": true,
+      "pinDigests": true
+    },
+    {
+      "description": "Review initial Docker digest pins; later digest refreshes retain automerge.",
+      "matchDatasources": ["docker"],
+      "matchUpdateTypes": ["pin", "pinDigest"],
+      "automerge": false,
+      "addLabels": ["pin - review"]
     },
     {
       "description": "Upstream-app docker bumps: open PR on day 0 (no internal-checks suppression). Automerge still respects the 3-day stability window via the renovate/stability-days status check on the PR. Fixes the 'Pending Status Checks' deadlock for repos without PR-side CI (most upstream apps).",
