@@ -131,13 +131,6 @@
       "pinDigests": true
     },
     {
-      "description": "Review initial Docker digest pins; later digest refreshes retain automerge.",
-      "matchDatasources": ["docker"],
-      "matchUpdateTypes": ["pin", "pinDigest"],
-      "automerge": false,
-      "addLabels": ["pin - review"]
-    },
-    {
       "description": "Upstream-app docker bumps: open PR on day 0 (no internal-checks suppression). Automerge still respects the 3-day stability window via the renovate/stability-days status check on the PR. Fixes the 'Pending Status Checks' deadlock for repos without PR-side CI (most upstream apps).",
       "matchManagers": [
         "docker-compose",
