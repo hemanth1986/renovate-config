@@ -5,8 +5,17 @@
     ":semanticCommits",
     "docker:enableMajor"
   ],
-  "schedule": [
-    "* 0-8 * * *"
+  "description": [
+    "No top-level `schedule` on purpose. `schedule` gates branch and PR CREATION, not merging.",
+    "It used to be set to the same 0-8 window as automergeSchedule, which meant a repo only ever",
+    "got a PR if one of Renovate's runs happened to land inside that 9-hour window. Repos whose",
+    "runs fell outside it silently accumulated updates in the dashboard's 'Awaiting Schedule'",
+    "section and never produced a single PR - openarchiver-bmaminipc sat there for 9 days with 5",
+    "pending updates and zero PRs, including a Meilisearch major that mattered. It also defeated",
+    "the 'open PR on day 0' packageRule further down, which cannot fire if creation is gated.",
+    "Deploy safety is preserved by automergeSchedule alone: nothing merges - and therefore nothing",
+    "auto-deploys - outside 00:00-08:59 IST, and minimumReleaseAge still holds every update for 3",
+    "days. The only change is that PRs now appear promptly instead of being lost."
   ],
   "automergeSchedule": [
     "* 0-8 * * *"
