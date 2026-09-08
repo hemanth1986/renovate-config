@@ -166,6 +166,20 @@
       "matchDatasources": ["docker"],
       "matchPackageNames": ["/linuxserver/"],
       "versioning": "regex:^v?(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)(?:\\.(?<build>\\d+))?(?:-ls(?<revision>\\d+))?$"
+    },
+    {
+      "description": "Twenty owner build: track the upstream candidate manifest instead of directly changing the deployment image.",
+      "matchPackageNames": ["twentycrm/twenty"],
+      "matchManagers": ["docker-compose"],
+      "enabled": false
+    },
+    {
+      "description": "Twenty candidates always use PR checks, including digest updates. Inherit central update-type, release-age and merge-window policy.",
+      "matchPackageNames": ["twentycrm/twenty"],
+      "matchManagers": ["custom.regex"],
+      "automergeType": "pr",
+      "prCreation": "immediate",
+      "ignoreTests": false
     }
   ],
   "customManagers": [
@@ -178,6 +192,16 @@
       ],
       "datasourceTemplate": "github-releases",
       "versioningTemplate": "semver"
+    },
+    {
+      "description": "Track the pinned upstream Twenty image used by the owner-access build and upgrade checks.",
+      "customType": "regex",
+      "managerFilePatterns": ["/^upgrade\\/candidate\\.json$/"],
+      "matchStrings": [
+        "\"upstreamImage\":\\s*\"(?<depName>twentycrm/twenty):(?<currentValue>v\\d+\\.\\d+\\.\\d+)@(?<currentDigest>sha256:[a-f0-9]{64})\""
+      ],
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "docker"
     }
   ]
 }
