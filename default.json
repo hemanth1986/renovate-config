@@ -180,6 +180,15 @@
       "automergeType": "pr",
       "prCreation": "immediate",
       "ignoreTests": false
+    },
+    {
+      "description": "Twenty test-driver dependencies are trusted tooling: require reviewed PRs instead of automatic code changes.",
+      "matchRepositories": ["hemanth1986/twentycrm-innovspatial"],
+      "matchFileNames": ["upgrade/TestDriver.Dockerfile"],
+      "automerge": false,
+      "automergeType": "pr",
+      "prCreation": "immediate",
+      "ignoreTests": false
     }
   ],
   "customManagers": [
