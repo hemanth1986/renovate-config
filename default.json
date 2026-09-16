@@ -189,6 +189,12 @@
       "automergeType": "pr",
       "prCreation": "immediate",
       "ignoreTests": false
+    },
+    {
+      "description": "Preserve the historical context-mode wiring snapshot; the installed plugin is maintained through its marketplace.",
+      "matchRepositories": ["hemanth1986/AIRulesHub"],
+      "matchFileNames": ["Claude/Plugins/ThirdParty/context-mode/**"],
+      "enabled": false
     }
   ],
   "customManagers": [
