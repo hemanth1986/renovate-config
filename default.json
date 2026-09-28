@@ -195,6 +195,14 @@
       "matchRepositories": ["hemanth1986/AIRulesHub"],
       "matchFileNames": ["Claude/Plugins/ThirdParty/context-mode/**"],
       "enabled": false
+    },
+    {
+      "description": "Traefik is the front door on every host that runs it (controlplane, office gateway, familytvbox): never auto-merge, whatever the update type. A person reads the release migration notes, merges the office-https-gateway and AIRulesHub PRs together, then upgrades each host; fleet-drift pages until every Traefik matches the pinned version.",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["traefik", "docker.io/traefik", "docker.io/library/traefik"],
+      "automerge": false,
+      "prCreation": "immediate",
+      "addLabels": ["traefik - review"]
     }
   ],
   "customManagers": [
