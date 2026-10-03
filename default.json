@@ -133,9 +133,18 @@
       "enabled": false
     },
     {
+      "description": "Do not update our organization-built deployment images; their source repositories publish them.",
+      "matchRepositories": ["!hemanth1986/twentycrm-innovspatial", "!innovspatial/twenty-innovspatial"],
+      "matchPackageNames": ["ghcr.io/innovspatial/**"],
+      "enabled": false
+    },
+    {
       "description": "Track the shared pgBackRest image despite the general self-image exclusion.",
       "matchDatasources": ["docker"],
-      "matchPackageNames": ["ghcr.io/hemanth1986/postgres-pgbackrest"],
+      "matchPackageNames": [
+        "ghcr.io/hemanth1986/postgres-pgbackrest",
+        "ghcr.io/innovspatial/postgres-pgbackrest"
+      ],
       "enabled": true,
       "pinDigests": true
     },
@@ -203,6 +212,21 @@
       "automerge": false,
       "prCreation": "immediate",
       "addLabels": ["traefik - review"]
+    },
+    {
+      "description": "Review database image updates together with Backrest, pgBackRest and Restore Console recovery contracts.",
+      "matchRepositories": ["!hemanth1986/twentycrm-innovspatial", "!innovspatial/twenty-innovspatial"],
+      "matchDatasources": ["docker"],
+      "matchPackageNames": [
+        "postgres", "docker.io/postgres", "docker.io/library/postgres",
+        "mariadb", "docker.io/mariadb", "docker.io/library/mariadb",
+        "ghcr.io/hemanth1986/postgres-pgbackrest",
+        "ghcr.io/innovspatial/postgres-pgbackrest"
+      ],
+      "automerge": false,
+      "automergeType": "pr",
+      "prCreation": "immediate",
+      "addLabels": ["database - review"]
     }
   ],
   "customManagers": [
