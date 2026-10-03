@@ -220,6 +220,7 @@
       "matchPackageNames": [
         "postgres", "docker.io/postgres", "docker.io/library/postgres",
         "mariadb", "docker.io/mariadb", "docker.io/library/mariadb",
+        "paradedb/paradedb", "ghcr.io/immich-app/postgres", "kasmweb/postgres",
         "ghcr.io/hemanth1986/postgres-pgbackrest",
         "ghcr.io/innovspatial/postgres-pgbackrest"
       ],
