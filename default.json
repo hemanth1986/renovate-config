@@ -25,6 +25,13 @@
     "dependencies"
   ],
   "minimumReleaseAge": "3 days",
+  "logLevelRemap": [
+    {
+      "description": "Expected, not a fault: the docker rule below uses minimumReleaseAgeBehaviour=timestamp-optional because registries such as GHCR publish no release dates. Renovate docs recommend remapping this warning to info so it stops flagging repos in Mend and on dashboards.",
+      "matchMessage": "/Some .+ did not have a releaseTimestamp, but as we're running with minimumReleaseAgeBehaviour=timestamp-optional, proceeding/",
+      "newLogLevel": "info"
+    }
+  ],
   "internalChecksFilter": "none",
   "internalChecksAsSuccess": true,
   "automerge": true,
