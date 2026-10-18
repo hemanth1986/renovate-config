@@ -190,9 +190,11 @@
       "enabled": false
     },
     {
-      "description": "Twenty candidates always use PR checks, including digest updates. Inherit central update-type, release-age and merge-window policy.",
+      "description": "Twenty candidates always use PR checks, including digest updates. Inherit central update-type, release-age and merge-window policy. Monthly: each upgrade needs a patch re-port and a full rehearsal, so candidates open and rebuild only in the first week of the month, which also limits repeat failure alerts. Security fixes ignore the schedule.",
       "matchPackageNames": ["twentycrm/twenty"],
       "matchManagers": ["custom.regex"],
+      "schedule": ["* * 1-7 * *"],
+      "updateNotScheduled": false,
       "automergeType": "pr",
       "prCreation": "immediate",
       "ignoreTests": false
