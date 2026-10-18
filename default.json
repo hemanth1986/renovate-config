@@ -200,9 +200,10 @@
       "ignoreTests": false
     },
     {
-      "description": "Twenty test-driver dependencies are trusted tooling: require reviewed PRs instead of automatic code changes.",
+      "description": "Twenty test-driver dependencies are trusted tooling: require reviewed PRs instead of automatic code changes. One grouped PR, because the Bun and Playwright pins sit on adjacent lines and separate PRs conflict after the first merge.",
       "matchRepositories": ["hemanth1986/twentycrm-innovspatial"],
       "matchFileNames": ["upgrade/TestDriver.Dockerfile"],
+      "groupName": "Twenty test driver",
       "automerge": false,
       "automergeType": "pr",
       "prCreation": "immediate",
