@@ -32,7 +32,7 @@
       "newLogLevel": "info"
     }
   ],
-  "internalChecksFilter": "none",
+  "internalChecksFilter": "flexible",
   "internalChecksAsSuccess": true,
   "automerge": true,
   "platformAutomerge": false,
