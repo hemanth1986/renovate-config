@@ -37,6 +37,12 @@
   "automerge": true,
   "platformAutomerge": false,
   "osvVulnerabilityAlerts": true,
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": [
+      "* 0-5 * * 1"
+    ]
+  },
   "vulnerabilityAlerts": {
     "minimumReleaseAge": "3 days",
     "addLabels": [
@@ -114,6 +120,13 @@
       "addLabels": [
         "maintenance - auto"
       ]
+    },
+    {
+      "description": "bun repos: raise caret ranges so in-range fixes get a PR. rangeStrategy auto acts as 'replace' for bun (update-lockfile is unsupported there), so '^7.1.0' never moved to a fixed 7.18.2. Transitive packages are refreshed by the weekly lockFileMaintenance above.",
+      "matchManagers": [
+        "bun"
+      ],
+      "rangeStrategy": "bump"
     },
     {
       "description": "Group dev-dependency minor+patch bumps; inherit the normal auto-merge gates",
