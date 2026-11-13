@@ -15,7 +15,11 @@
     "the 'open PR on day 0' packageRule further down, which cannot fire if creation is gated.",
     "Deploy safety is preserved by automergeSchedule alone: nothing merges - and therefore nothing",
     "auto-deploys - outside 00:00-08:59 IST, and minimumReleaseAge still holds every update for 3",
-    "days. The only change is that PRs now appear promptly instead of being lost."
+    "days. The only change is that PRs now appear promptly instead of being lost.",
+    "2026-11-13: internalChecksFilter is strict, so a PR is only opened once a version is 3 days old.",
+    "Renovate merges at most one PR per repo per run, so separate PRs piled up faster than the night",
+    "window could merge them. Non-major updates are therefore grouped into one PR per repo, and the",
+    "review classes (majors, databases, Traefik) wait as tick-boxes on each Dependency Dashboard."
   ],
   "automergeSchedule": [
     "* 0-8 * * *"
@@ -32,7 +36,7 @@
       "newLogLevel": "info"
     }
   ],
-  "internalChecksFilter": "flexible",
+  "internalChecksFilter": "strict",
   "internalChecksAsSuccess": true,
   "automerge": true,
   "platformAutomerge": false,
@@ -101,14 +105,15 @@
       ]
     },
     {
-      "description": "Label major updates for careful review (breaking by definition)",
+      "description": "Major updates (breaking by definition): no PR until ticked on the Dependency Dashboard, then labelled for careful review",
       "matchUpdateTypes": [
         "major"
       ],
       "automerge": false,
       "addLabels": [
         "major - review"
-      ]
+      ],
+      "dependencyDashboardApproval": true
     },
     {
       "description": "Auto-merge lock file maintenance silently",
@@ -129,15 +134,13 @@
       "rangeStrategy": "bump"
     },
     {
-      "description": "Group dev-dependency minor+patch bumps; inherit the normal auto-merge gates",
-      "matchDepTypes": [
-        "devDependencies"
-      ],
+      "description": "One PR per repo for all minor+patch updates. Renovate automerges only one PR per repo per run, so separate PRs queue up for days; a single grouped PR clears a repo in one run. Inherits the normal auto-merge gates. Later rules opt out with groupName null.",
       "matchUpdateTypes": [
         "minor",
         "patch"
       ],
-      "groupName": "dev minor+patch"
+      "groupName": "non-major updates",
+      "groupSlug": "non-major"
     },
     {
       "description": "Pin Docker images; treat missing release timestamps as eligible after the normal gate.",
@@ -210,7 +213,8 @@
       "updateNotScheduled": false,
       "automergeType": "pr",
       "prCreation": "immediate",
-      "ignoreTests": false
+      "ignoreTests": false,
+      "groupName": null
     },
     {
       "description": "Twenty test-driver dependencies are trusted tooling: require reviewed PRs instead of automatic code changes. One grouped PR, because the Bun and Playwright pins sit on adjacent lines and separate PRs conflict after the first merge.",
@@ -234,7 +238,9 @@
       "matchPackageNames": ["traefik", "docker.io/traefik", "docker.io/library/traefik"],
       "automerge": false,
       "prCreation": "immediate",
-      "addLabels": ["traefik - review"]
+      "addLabels": ["traefik - review"],
+      "groupName": null,
+      "dependencyDashboardApproval": true
     },
     {
       "description": "Review database image updates together with Backrest, pgBackRest and Restore Console recovery contracts.",
@@ -250,7 +256,9 @@
       "automerge": false,
       "automergeType": "pr",
       "prCreation": "immediate",
-      "addLabels": ["database - review"]
+      "addLabels": ["database - review"],
+      "groupName": null,
+      "dependencyDashboardApproval": true
     }
   ],
   "customManagers": [
