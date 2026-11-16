@@ -14,15 +14,19 @@
     "pending updates and zero PRs, including a Meilisearch major that mattered. It also defeated",
     "the 'open PR on day 0' packageRule further down, which cannot fire if creation is gated.",
     "Deploy safety is preserved by automergeSchedule alone: nothing merges - and therefore nothing",
-    "auto-deploys - outside 00:00-08:59 IST, and minimumReleaseAge still holds every update for 3",
+    "auto-deploys - outside the merge window (see the 2026-11-16 note), and minimumReleaseAge still holds every update for 3",
     "days. The only change is that PRs now appear promptly instead of being lost.",
     "2026-11-13: internalChecksFilter is strict, so a PR is only opened once a version is 3 days old.",
     "Renovate merges at most one PR per repo per run, so separate PRs piled up faster than the night",
     "window could merge them. Non-major updates are therefore grouped into one PR per repo, and the",
-    "review classes (majors, databases, Traefik) wait as tick-boxes on each Dependency Dashboard."
+    "review classes (majors, databases, Traefik) wait as tick-boxes on each Dependency Dashboard.",
+    "2026-11-16: merge window widened from 00:00-08:59 IST to 19:00-08:59 IST daily plus all of Sunday.",
+    "The free hosted app runs one job at a time per account and each update needs two visits (open,",
+    "then merge), so in a 9-hour window PRs in the larger account sat through whole nights."
   ],
   "automergeSchedule": [
-    "* 0-8 * * *"
+    "* 0-8,19-23 * * *",
+    "* * * * 0"
   ],
   "timezone": "Asia/Kolkata",
   "labels": [
