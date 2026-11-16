@@ -218,7 +218,8 @@
       "automergeType": "pr",
       "prCreation": "immediate",
       "ignoreTests": false,
-      "groupName": null
+      "groupName": null,
+      "dependencyDashboardApproval": true
     },
     {
       "description": "Twenty test-driver dependencies are trusted tooling: require reviewed PRs instead of automatic code changes. One grouped PR, because the Bun and Playwright pins sit on adjacent lines and separate PRs conflict after the first merge.",
@@ -228,7 +229,8 @@
       "automerge": false,
       "automergeType": "pr",
       "prCreation": "immediate",
-      "ignoreTests": false
+      "ignoreTests": false,
+      "dependencyDashboardApproval": true
     },
     {
       "description": "Preserve the historical context-mode wiring snapshot; the installed plugin is maintained through its marketplace.",
