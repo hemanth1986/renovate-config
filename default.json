@@ -72,7 +72,8 @@
       ],
       "automerge": true,
       "automergeType": "branch",
-      "addLabels": [
+      "labels": [
+        "dependencies",
         "digest - auto"
       ]
     },
@@ -84,7 +85,8 @@
       ],
       "automerge": true,
       "automergeType": "branch",
-      "addLabels": [
+      "labels": [
+        "dependencies",
         "pin - auto"
       ]
     },
@@ -94,7 +96,8 @@
         "patch"
       ],
       "automerge": true,
-      "addLabels": [
+      "labels": [
+        "dependencies",
         "patch - auto"
       ]
     },
@@ -104,7 +107,8 @@
         "minor"
       ],
       "automerge": true,
-      "addLabels": [
+      "labels": [
+        "dependencies",
         "minor - auto"
       ]
     },
@@ -126,7 +130,8 @@
       ],
       "automerge": true,
       "automergeType": "branch",
-      "addLabels": [
+      "labels": [
+        "dependencies",
         "maintenance - auto"
       ]
     },
@@ -227,6 +232,7 @@
       "matchFileNames": ["upgrade/TestDriver.Dockerfile"],
       "groupName": "Twenty test driver",
       "automerge": false,
+      "labels": ["dependencies"],
       "automergeType": "pr",
       "prCreation": "immediate",
       "ignoreTests": false,
@@ -244,7 +250,7 @@
       "matchPackageNames": ["traefik", "docker.io/traefik", "docker.io/library/traefik"],
       "automerge": false,
       "prCreation": "immediate",
-      "addLabels": ["traefik - review"],
+      "labels": ["dependencies", "traefik - review"],
       "groupName": null,
       "dependencyDashboardApproval": true
     },
@@ -262,7 +268,7 @@
       "automerge": false,
       "automergeType": "pr",
       "prCreation": "immediate",
-      "addLabels": ["database - review"],
+      "labels": ["dependencies", "database - review"],
       "groupName": null,
       "dependencyDashboardApproval": true
     }
