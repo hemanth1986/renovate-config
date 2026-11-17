@@ -1,0 +1,86 @@
+name: Nightly Renovate nudge
+
+# Why this exists: the free hosted Renovate app visits a repository about twice a day and does one
+# step per visit (open a PR, update it, or merge it). A ready PR therefore sat for days. This job
+# asks Renovate to run again on every repository that has a waiting automerge PR, by ticking the
+# "manual job" box on that repository's Dependency Dashboard. Renovate still decides what merges:
+# the 3-day wait, the tests and the merge window in default.json all apply unchanged.
+#
+# This repository is public, so the log prints counts only, never repository names.
+
+on:
+  schedule:
+    # 19:42, 23:42, 03:42 and 07:42 IST: inside the merge window (19:00-08:59 IST).
+    - cron: "12 14,18,22,2 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions: {}
+
+jobs:
+  nudge:
+    name: Ask Renovate to run where a PR is waiting
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - owner: hemanth1986
+            secret: RENOVATE_NUDGE_TOKEN_HEMANTH1986
+          - owner: innovspatial
+            secret: RENOVATE_NUDGE_TOKEN_INNOVSPATIAL
+    steps:
+      - name: Tick the manual-job box on each repository with a waiting PR
+        env:
+          GH_TOKEN: ${{ secrets[matrix.secret] }}
+          OWNER: ${{ matrix.owner }}
+        run: |
+          set -euo pipefail
+          if [ -z "${GH_TOKEN:-}" ]; then
+            echo "::error::The token secret for this account is not set; nothing was done."
+            exit 1
+          fi
+
+          # Open Renovate PRs for this account that Renovate itself marks as automerge.
+          repos=$(gh api -X GET search/issues --paginate \
+            -f q="is:pr is:open author:app/renovate user:${OWNER}" -f per_page=100 \
+            --jq '.items[] | select((.body // "") | test("\\*\\*Automerge\\*\\*: Enabled")) | .repository_url | sub("^https://api.github.com/repos/"; "")' \
+            2>/dev/null | sort -u) || { echo "::error::Listing waiting PRs failed."; exit 1; }
+
+          total=0; ticked=0; already=0; missing=0; failed=0
+          for repo in $repos; do
+            total=$((total + 1))
+            issue=$(gh api -X GET "repos/${repo}/issues" -f creator='renovate[bot]' -f state=open -f per_page=100 \
+              --jq '[.[] | select(.pull_request | not) | select(.title == "Dependency Dashboard")][0] | {number, body}' \
+              2>/dev/null) || { failed=$((failed + 1)); continue; }
+            number=$(jq -r '.number // empty' <<<"$issue")
+            if [ -z "$number" ]; then missing=$((missing + 1)); continue; fi
+            body=$(jq -r '.body // ""' <<<"$issue")
+            case "$body" in
+              *'- [ ] <!-- manual job -->'*)
+                new=${body/'- [ ] <!-- manual job -->'/'- [x] <!-- manual job -->'}
+                if jq -n --arg body "$new" '{body: $body}' \
+                  | gh api -X PATCH "repos/${repo}/issues/${number}" --input - >/dev/null 2>&1; then
+                  ticked=$((ticked + 1))
+                else
+                  failed=$((failed + 1))
+                fi
+                ;;
+              *'- [x] <!-- manual job -->'*) already=$((already + 1)) ;;
+              *) missing=$((missing + 1)) ;;
+            esac
+          done
+
+          echo "Repositories with a waiting automerge PR: ${total}"
+          echo "Renovate asked to run: ${ticked}"
+          echo "Run already requested: ${already}"
+          echo "No dashboard box found: ${missing}"
+          echo "Failed: ${failed}"
+          if [ "$failed" -gt 0 ]; then
+            echo "::error::${failed} repositories could not be nudged."
+            exit 1
+          fi
