@@ -3,7 +3,8 @@
   "extends": [
     "config:recommended",
     ":semanticCommits",
-    "docker:enableMajor"
+    "docker:enableMajor",
+    "customManagers:dockerfileVersions"
   ],
   "description": [
     "No top-level `schedule` on purpose. `schedule` gates branch and PR CREATION, not merging.",
@@ -22,7 +23,10 @@
     "review classes (majors, databases, Traefik) wait as tick-boxes on each Dependency Dashboard.",
     "2026-11-16: merge window widened from 00:00-08:59 IST to 19:00-08:59 IST daily plus all of Sunday.",
     "The free hosted app runs one job at a time per account and each update needs two visits (open,",
-    "then merge), so in a 9-hour window PRs in the larger account sat through whole nights."
+    "then merge), so in a 9-hour window PRs in the larger account sat through whole nights.",
+    "2026-11-19: customManagers:dockerfileVersions reads a '# renovate: datasource=... depName=...'",
+    "comment above a Dockerfile ARG/ENV *_VERSION line, so versions installed by apt, pip, git clone",
+    "or a download URL inside a Dockerfile are tracked. Without the comment they are invisible."
   ],
   "automergeSchedule": [
     "* 0-8,19-23 * * *",
@@ -243,6 +247,15 @@
       "matchRepositories": ["hemanth1986/AIRulesHub"],
       "matchFileNames": ["Claude/Plugins/ThirdParty/context-mode/**"],
       "enabled": false
+    },
+    {
+      "description": "Versions read from '# renovate:' comments in Dockerfiles (customManagers:dockerfileVersions) never auto-merge: several of those repos have no pull-request build check and deploy straight from main, so a bump must be built and reviewed by a person. One grouped PR per repo.",
+      "matchManagers": ["custom.regex"],
+      "matchFileNames": ["**/[Dd]ockerfile*", "**/[Cc]ontainerfile*"],
+      "automerge": false,
+      "groupName": "Dockerfile pinned tools",
+      "groupSlug": "dockerfile-pins",
+      "labels": ["dependencies", "dockerfile pin - review"]
     },
     {
       "description": "Traefik is the front door on every host that runs it (controlplane, office gateway, familytvbox): never auto-merge, whatever the update type. A person reads the release migration notes, merges the office-https-gateway and AIRulesHub PRs together, then upgrades each host; fleet-drift pages until every Traefik matches the pinned version.",
