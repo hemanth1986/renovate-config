@@ -203,10 +203,10 @@
       "ignoreUnstable": true
     },
     {
-      "description": "linuxserver.io images tag as X.Y.Z[.BUILD]-lsN; default docker versioning can't compare the -lsN suffix, so updates (e.g. prowlarr) were silently missed. Parse with regex versioning; optional groups also cover plain X.Y.Z linuxserver tags (e.g. speedtest-tracker).",
+      "description": "linuxserver.io images tag as X.Y.Z[.BUILD]-lsN; default docker versioning can't compare the -lsN suffix, so updates (e.g. prowlarr) were silently missed. Parse with regex versioning; optional groups also cover plain X.Y.Z linuxserver tags (e.g. speedtest-tracker). The optional version- prefix (compatibility group) covers tags such as version-6.4.4.10685 (arr-personal); without it those tags did not match, Renovate logged 'unsupported/unversioned value' and only digest PRs arrived (radarr sat on 6.4.4 while 7.0.3 was out, found 2026-11-19). The compatibility group keeps prefixed and unprefixed tags from being compared with each other.",
       "matchDatasources": ["docker"],
       "matchPackageNames": ["/linuxserver/"],
-      "versioning": "regex:^v?(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)(?:\\.(?<build>\\d+))?(?:-ls(?<revision>\\d+))?$"
+      "versioning": "regex:^(?<compatibility>version-)?v?(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)(?:\\.(?<build>\\d+))?(?:-ls(?<revision>\\d+))?$"
     },
     {
       "description": "Twenty owner build: track the upstream candidate manifest instead of directly changing the deployment image.",
